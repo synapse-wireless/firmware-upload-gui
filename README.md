@@ -37,3 +37,7 @@ details on how they can be used and what they correspond to when using SNAPconne
 library. See comments in [FirmwareUpgrader.py](FirmwareUpgrader.py) for information on how the GUI is tied into SNAPconnect.
 
 After filling out the required information, this script can be used to upgrade the firmware of a given node.
+
+## License
+
+Copyright © 2016 [Synapse Wireless](http://www.synapse-wireless.com/), licensed under the [Apache License v2.0](LICENSE.md).
