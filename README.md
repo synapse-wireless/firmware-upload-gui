@@ -2,6 +2,9 @@
 
 # SNAPconnect Example - wx Firmware Uploader
 
+
+![](https://cloud.githubusercontent.com/assets/1317406/14359686/3ccffc6e-fcb8-11e5-81d2-0824b9eebe21.gif)
+
 This example demonstrates how you can combine the wxPython library and SNAP Connect
 to create graphical interfaces that can interact with networks of SNAP devices. 
 It allows you to connect to a bridge node, set your encryption type, 
