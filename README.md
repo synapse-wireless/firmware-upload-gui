@@ -41,3 +41,5 @@ After filling out the required information, this script can be used to upgrade t
 ## License
 
 Copyright © 2016 [Synapse Wireless](http://www.synapse-wireless.com/), licensed under the [Apache License v2.0](LICENSE.md).
+
+<!-- meta-tags: vvv-gui, vvv-wx, vvv-snapconnect, vvv-python, vvv-example -->
