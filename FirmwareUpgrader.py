@@ -1,8 +1,8 @@
 # (c) Copyright 2014-2015 Synapse Wireless, Inc.
-"""FirmwareUpgrader provides a simple GUI for performing over the air
+"""FirmwareUpgrader provides a simple GUI for performing over-the-air
 firmware upgrades of SNAP nodes.
 
-This is intended to be an example of the firmware upgrade feature of SNAP Connect
+This is intended to be an example of the firmware upgrade feature of SNAPconnect
 and an example of integrating with wxPython.
 """
 import wx
@@ -15,7 +15,7 @@ from snapconnect import snap
 log = logging.getLogger("FirmwareUpgrader")
 
 ###############################################
-# Map display values to SNAP Connect Constants
+# Map display values to SNAPconnect Constants
 SERIAL_PORT_TYPES = {
     'SNAPSTICK100' : snap.SERIAL_TYPE_SNAPSTICK100,
     'SNAPSTICK200' : snap.SERIAL_TYPE_SNAPSTICK200,
@@ -45,21 +45,21 @@ class FirmwareUpgradeFrame(wx.Frame):
         wx.Frame.__init__(self, None, title="SNAP Connect - OTA Firmware Upgrader", size=(600, 450))
 
         self.upgrade_in_progress = False # Are we currently upgrading?
-        self.poll_time = 20 # Time in ms to poll SNAP Connect
-        self.init_snap()    # Start the SNAP Connect instance and add necessary hooks
+        self.poll_time = 20 # Time in ms to poll SNAPconnect
+        self.init_snap()    # Start the SNAPconnect instance and add necessary hooks
         self.init_ui()      # Build the application GUI
 
     def init_snap(self):
-        """Create a SNAP Connect instance and add hooks for firmware upgrades"""
+        """Create a SNAPconnect instance and add hooks for firmware upgrades"""
         self.comm = snap.Snap(funcs={})
         self.comm.set_hook(snap.hooks.HOOK_OTA_UPGRADE_COMPLETE, self._upgrade_complete_hook)
         self.comm.set_hook(snap.hooks.HOOK_OTA_UPGRADE_STATUS, self._upgrade_status_hook)
         self.comm.set_hook(snap.hooks.HOOK_SERIAL_OPEN, self._serial_open_hook)
 
-        # Start polling the SNAP Connect instance
-        # While running this script, the ws application MainLoop() will drive the program
-        # Here, we tie the polling of SNAP Connect into the application loop for the GUI
-        # We could also choose to run the SNAP Connect loop() function inside of a separate thread
+        # Start polling the SNAPconnect instance
+        # While running this script, the wx application MainLoop() will drive the program
+        # Here, we tie the polling of SNAPconnect into the application loop for the GUI
+        # We could also choose to run the SNAPconnect loop() function inside of a separate thread
         self.poller = wx.Timer(self, wx.NewId())
         self.Bind(wx.EVT_TIMER, self.poll_snap)
         self.poller.Start(self.poll_time, wx.TIMER_CONTINUOUS)
@@ -92,7 +92,7 @@ class FirmwareUpgradeFrame(wx.Frame):
         sizer.Add(bridge_type_label, pos=(row, 0), flag=wx.LEFT, border=10)
 
         self.bridge_type = wx.ComboBox(self.panel, choices=SERIAL_PORT_TYPES.keys(), style=wx.CB_READONLY|wx.CB_DROPDOWN)
-        self.bridge_type.SetToolTip(wx.ToolTip("This would normally be the 1st argument passed to open_serial"))
+        self.bridge_type.SetToolTip(wx.ToolTip("This would normally be the 1st argument passed to open_serial."))
         self.bridge_type.SetValue("RS232") #Set a default value
         sizer.Add(self.bridge_type, pos=(row, 1), span=(1, 3), flag=wx.EXPAND|wx.RIGHT, border=10)
 
@@ -132,7 +132,7 @@ class FirmwareUpgradeFrame(wx.Frame):
 
         self.crypto_key = wx.TextCtrl(self.panel)
         self.crypto_key.SetToolTip(wx.ToolTip("16 character encryption key that represents the value saved in NV_AES128_KEY_ID. " \
-                                              "This is not required when the encryption type is 'None'"))
+                                              "This is not required when the encryption type is 'None'."))
         sizer.Add(self.crypto_key, pos=(row, 1), span=(1, 3), flag=wx.EXPAND|wx.RIGHT, border=10)
 
         row+=1
@@ -154,7 +154,7 @@ class FirmwareUpgradeFrame(wx.Frame):
 
         self.target_addr = wx.TextCtrl(self.panel)
         self.target_addr.SetToolTip(wx.ToolTip("Address of the node that should be upgraded. "\
-                                              "Valid formats are AA.BB.CC or AABBCC"))
+                                              "Valid formats are AA.BB.CC or AABBCC."))
         sizer.Add(self.target_addr, pos=(row, 1), span=(1, 3), flag=wx.LEFT|wx.EXPAND|wx.RIGHT, border=10)
 
         ####################################################
@@ -177,7 +177,7 @@ class FirmwareUpgradeFrame(wx.Frame):
         ####################################################
         # Add a status bar
         row+=1
-        self.progress_bar = wx.Gauge(self.panel, range=1000) #Because Range is an integer, using 1000 lets us get more granular
+        self.progress_bar = wx.Gauge(self.panel, range=1000) #Because range is an integer, using 1000 lets us get more granular
         sizer.Add(self.progress_bar, pos=(row, 0), span=(1,4), flag=wx.LEFT|wx.EXPAND|wx.RIGHT, border=10)
 
         row+=1
@@ -243,7 +243,7 @@ class FirmwareUpgradeFrame(wx.Frame):
         # Make sure the address is a valid format
         try:
             if not self.get_upgrade_addr():
-                return "The target address must be specified in the form fo AABBCC or AA.BB.CC!"
+                return "The target address must be specified in the form of AABBCC or AA.BB.CC!"
         except TypeError, exc:
             return "The target address contains invalid characters!"
 
@@ -277,10 +277,10 @@ class FirmwareUpgradeFrame(wx.Frame):
 
         This could either be used to start a new upgrade or cancel an existing upgrade.
 
-        After clicking the button, the application will set the SNAP Connect instance
-        to use the provided encryption parameters to configure SNAP Connect and attempt
+        After clicking the button, the application will set the SNAPconnect instance
+        to use the provided encryption parameters to configure SNAPconnect and attempt
         to connect to the serial bridge. When the bridge is successfully opened the upgrade
-        will begin.  While upgrading, all inputs are locked to avoid changes.
+        will begin. While upgrading, all inputs are locked to avoid changes.
         """
         if not self.upgrade_in_progress:
             # If no upgrade is in progress, we need to start the upgrade process
@@ -363,7 +363,7 @@ class FirmwareUpgradeFrame(wx.Frame):
         self.status_text.SetLabel(message)
 
     ######################
-    # SNAP Connect Hooks
+    # SNAPconnect Hooks
     def _upgrade_complete_hook(self, addr, status, message):
         """Hook called when an OTA firmware upgrade has completed"""
         log.info("Upgrade Complete: %r %r %r"%(addr, status, message))
@@ -405,9 +405,9 @@ class FirmwareUpgradeFrame(wx.Frame):
             self.enable_inputs()
 
     ########################
-    # SNAP Connect Polling
+    # SNAPconnect Polling
     def poll_snap(self, evt):
-        """Poll the SNAP Connect instance from inside the applications event loop"""
+        """Poll the SNAPconnect instance from inside the applications event loop"""
         self.comm.poll()
 
 
